@@ -27,8 +27,8 @@ export default {
       type: Object
     }
   },
-  created(){
-  	this.classMap = ['decrease','discount','special','invoice','guarantee'];
+  created() {
+    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
   }
 };
 </script>
@@ -73,6 +73,7 @@ export default {
   			.support
   				.icon
   					display: inline-block
+  					vertical-align: top
   					width: 12px
   					height: 12px
   					margin-right: 4px
@@ -84,8 +85,11 @@ export default {
   						bg-image('discount_1')
   					&.special
   						bg-image('special_1')
-  					&.invoice
+					  &.invoice
   						bg-image('invoice_1')
   					&.guarantee
   						bg-image('guarantee_1')
+				  .text
+            line-height: 12px
+            font-size: 10px        
 </style>
