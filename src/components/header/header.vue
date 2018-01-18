@@ -15,32 +15,60 @@
   	  	<span class="text" v-text="seller.supports[0].description"></span>
   	  </div>
   	</div>
-  	<div class="support-count" v-if="seller.supports">
+  	<div class="support-count" v-if="seller.supports" @click="showDetail">
   		<span class="count">{{seller.supports.length}}个</span>
   		<i class="icon-keyboard_arrow_right"></i>
   	</div>
   </div>
-  <div class="bulletin-wrapper">
+  <div class="bulletin-wrapper" @click="showDetail">
   	<span class="bulletin-title"></span><span class="bulletin-text">{{seller.bulletin}}</span>
   	<i class="icon-keyboard_arrow_right"></i>
   </div>
   <div class="background">
   	<img :src="seller.avatar" width="100%" height="100%">
   </div>
+  <div class="detail" v-show="detailShow">
+  	<!-- 使用Sticky footers布局（该方法稍复杂，但兼容性是最好的） -->
+  	<div class="detail-wrapper clearfix"><!-- 容器层 clearfix用于清楚浮动 -->
+  		<div class="detail-main"><!-- 内容 -->
+  			<h1 class="name">{{seller.name}}</h1>
+  			<div class="star-wrapper">
+  				<star :size="48" :score="seller.score"></star>
+  			</div>
+  		</div>
+  	</div>
+  	<div class="detail-close"><!-- 底部层 -->
+  		<i class="icon-close"></i>
+  	</div>
+  </div>
 </div>
 </template>
 
 <script type="text/ecmascript-6">
-export default {
-  props: {
-    seller: {
-      type: Object
+  import star from '@components/star/star';
+  export default {
+    props: {
+      seller: {
+        type: Object
+      }
+    },
+    data() {
+      return {
+        detailShow: false
+      };
+    },
+    methods: {
+      showDetail() {
+        this.detailShow = true;
+      }
+    },
+    created() {
+      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
+    },
+    components: {
+      star
     }
-  },
-  created() {
-    this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
-  }
-};
+  };
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
@@ -50,6 +78,7 @@ export default {
   @import "../../common/stylus/mixin"
   .header
   	position: relative
+  	overflow: hidden
   	color: #fff
   	background-color: rgba(7, 17, 27, 0.5)
   	.content-wrapper
@@ -135,7 +164,7 @@ export default {
     	.bulletin-title
     		display: inline-block
     		vertical-align: top
-    		margin-top: 7px
+    		margin-top: 8px
     		width: 22px
     		height: 12px
     		bg-image('bulletin')
@@ -158,4 +187,35 @@ export default {
   		height: 100%
   		z-index: -1
   		filter: blur(10px)// 产生模糊效果
+  	.detail
+  		position: fixed
+  		z-index: 100
+  		top: 0
+  		left: 0
+  		width: 100%
+  		height: 100%
+  		overflow: auto
+  		background-color: rgba(7, 17, 27, 0.8)
+  		.detail-wrapper
+  			min-height: 100%
+  			width: 100%
+  			.detail-main
+  				margin-top: 64px
+  				padding-bottom: 64px
+  				.name
+  					line-height: 16px
+  					text-align: center
+  					font-size: 16px
+  					font-weight: 700
+  				.star-wrapper
+  					margin-top: 18px
+  					padding: 2px 0
+  					text-align: center
+  		.detail-close
+  			position: relative
+  			width: 32px
+  			height: 32px
+  			margin: -64px auto 0 auto
+  			clear: both
+  			font-size: 32px
 </style>
