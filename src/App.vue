@@ -40,11 +40,11 @@
 
 
 <style lang="stylus" rel="stylesheet/stylus">
-// @import 是stylus的特殊语法 可以引入如何路径下的styl
+// @import 脢脟stylus碌脛脤脴脢芒脫茂路篓 驴脡脪脭脪媒脠毛脠莽潞脦脗路戮露脧脗碌脛styl
   @import "./common/stylus/mixin.styl";
 
-// 使用伪类after来实现边线1像素；直接使用border-bottom在手机上看是比较粗的，因为如ipone6的dpi是2，所以线条为2像素
-// &表示他的父元素 即.tab-item；> 为后排选择器
+// 脢鹿脫脙脦卤脌脿after脌麓脢碌脧脰卤脽脧脽1脧帽脣脴拢禄脰卤陆脫脢鹿脫脙border-bottom脭脷脢脰禄煤脡脧驴麓脢脟卤脠陆脧麓脰碌脛拢卢脪貌脦陋脠莽ipone6碌脛dpi脢脟2拢卢脣霉脪脭脧脽脤玫脦陋2脧帽脣脴
+// &卤铆脢戮脣没碌脛赂赂脭陋脣脴 录麓.tab-item拢禄> 脦陋潞贸脜脜脩隆脭帽脝梅
   .tab
     display: flex
     width: 100%
