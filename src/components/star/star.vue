@@ -26,7 +26,7 @@
       itemClasses() {
         let result = [];
         // floor下舍入，即向小的整数舍入
-        let score = Math.floor(this.score * 2) / 2;
+        let score = Math.floor(this.score * 2) / 2;// 小数小于5，则舍弃小数取整；小数大于等于5，则进1取整
         let hasDecimal = score % 1 !== 0;
         let integer = Math.floor(score);
         for (let i = 0; i < integer; i++) {
