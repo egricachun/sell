@@ -12,7 +12,7 @@
         <router-link to="/seller">seller</router-link>
     	</div>
     </div>
-    <router-view></router-view>
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 
@@ -27,7 +27,7 @@
 	  },
 	  created() {
 	    this.$http.get('/api/seller').then(response => {
-	      if (response.errno !== ERR_OK) {
+	      if (response.body.errno === ERR_OK) {
 	        this.seller = response.body.data;
 	      }
 	    });
