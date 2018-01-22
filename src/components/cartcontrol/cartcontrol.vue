@@ -28,11 +28,11 @@
         }
         if (!this.food.count) {
           Vue.set(this.food, 'count', 1); // 新增、删除某个字段时，要用Vue.set方法，这样变化才能被检测到，从而才能使dom发生变化
-          console.log(this.food.count);
         } else {
           this.food.count++;
         }
-        this.$emit('cart.add', event.target); // 触发父组件事件（方法，数据）
+        this.$emit('cartAdd', event.target);
+        // this.$emit('cart.add', event.target); // 触发父组件事件（方法，数据）
       },
       decreaseCart(even) {
         if (!even._constructed) {

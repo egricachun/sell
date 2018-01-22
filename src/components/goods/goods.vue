@@ -31,7 +31,7 @@
                   <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
-                  <cartcontrol @cart.add="_drop" :msg="msg" :food = "food"></cartcontrol>
+                  <cartcontrol @cartAdd="_drop" :food = "food"></cartcontrol>
                 </div>
               </div>
             </li>
@@ -136,15 +136,14 @@
           // 自己开发的click，_constructex为true;浏览器原生（默认）的点击事件无该属性
           return;
         }
-        let foodList = this.$els.foodsWrapper.getElementsByClassName('food-list-hook');
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
         let el = foodList[index];
         this.foodsScroll.scrollToElement(el, 300); // 滚动到指定元素，滚动时间
       },
       // cartcontrol选择商品子组件触发的事件
-      _drop(msg) {
-        console.log(msg);
-        // this.$refs.shopcart可访问到子组建
-        this.$refs.shopcart.drop(msg);
+      _drop(target) {
+        // this.$refs.shopcart(这个shopcart是ref="shopcart")可访问到shopcart(这个是shopcart)子组建
+        this.$refs.shopcart.drop(target);
       }
     },
     components: {
