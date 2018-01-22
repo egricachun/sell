@@ -17,6 +17,14 @@
         </div>
       </div>
   	</div>
+    <!-- 选择商品，小球飞入 -->
+    <div class="ball-container">
+      <transition name="drop">
+        <div v-show="balls.show" class="ball">
+          <div class="inner"></div>
+        </div>
+      </transition>
+    </div>
   </div>
 </template>
 
@@ -43,6 +51,15 @@
         type: Number,
         default: 0
       }
+    },
+    data() {
+      return {
+        balls: [
+          {
+            show: false
+          }
+        ]
+      };
     },
     computed: {
       totalPrice() {
@@ -77,6 +94,11 @@
         } else {
           return 'enough';
         }
+      }
+    },
+    methods: {
+      drop(el) {
+        console.log(el);
       }
     }
   };
@@ -169,4 +191,19 @@
           &.enough
             background-color: #00b43c
             color: #fff
+    .ball-container
+      .ball
+        position: fixed
+        left: 32px
+        bottom: 22px
+        z-index: 200
+        &.drop-enter-active
+          transition: all 0.4s
+          .inner
+            width: 16px
+            height: 16px
+            border-radius: 50%
+            backgorund-color: rgb(0, 160, 220)
+            transition: all
+          
 </style>
