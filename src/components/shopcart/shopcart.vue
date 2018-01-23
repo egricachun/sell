@@ -1,6 +1,6 @@
 <template>
   <div class="shopcart">
-    <div class="content">
+    <div class="content" @click="toggleList">
       <div class="content-left">
         <div class="logo-wrapper">
           <div class="logo" :class="{'highlight':totalCount>0}">
@@ -25,12 +25,39 @@
         </div>
       </transition>
     </div>
+    <!-- 购物车列表 -->
+    <transition name="fold">
+      <div class="shopcart-list" v-show="listShow">
+        <div class="list-header">
+          <h1 class="title">购物车</h1>
+          <span class="empty">清空</span>
+        </div>
+        <div class="list-content" ref="listContent">
+          <ul>
+            <li class="food" v-for="food in selectFoods">
+              <span class="name">{{food.name}}</span>
+              <div class="price">
+                <span>&yen;{{food.price*food.count}}</span>
+              </div>
+              <div class="cartcontrol-wrapper">
+                <cartcontrol :food = "food"></cartcontrol>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  // 引入滚动库
+  import BScroll from 'better-scroll';
+  import cartcontrol from '@components/cartcontrol/cartcontrol';
+
   export default {
     props: {
+      // 购物车商品
       selectFoods: {
         type: Array,
         default() {
@@ -43,10 +70,12 @@
           ];
         }
       },
+      // 运费
       deliveryPrice: {
         type: Number,
         default: 0
       },
+      // 最低配送价
       minPrice: {
         type: Number,
         default: 0
@@ -54,15 +83,19 @@
     },
     data() {
       return {
+        // 抛物小球
         balls: [
           {
             show: false
           }
         ],
-        dropBalls: []
+        // 可抛的小球
+        dropBalls: [],
+        fold: true // 购物车列表是否折叠 true:折叠，false:打开
       };
     },
     computed: {
+      // 总价
       totalPrice() {
         let total = 0;
         this.selectFoods.forEach((food) => {
@@ -70,6 +103,7 @@
         });
         return total;
       },
+      // 总数
       totalCount() {
         let count = 0;
         this.selectFoods.forEach((food) => {
@@ -77,6 +111,7 @@
         });
         return count;
       },
+      // 配送语
       payDesc() {
         if (this.totalPrice === 0) {
           // 反引号可以把变量通过${}的方式写在里面，无需再用加号+连接
@@ -89,15 +124,40 @@
           return '去结算';
         }
       },
+      // 配送语颜色
       payClass() {
         if (this.totalPrice < this.minPrice) {
           return 'not-enough';
         } else {
           return 'enough';
         }
+      },
+      // 购物车列表是否打开
+      listShow() {
+        if (!this.totalCount) {
+          this.fold = true;
+          return false;
+        }
+        let show = !this.fold;
+        // 列表显示时才给他加滚动
+        if (show) {
+          this.$nextTick(() => {
+            // show经常变化，所以给他加多个判断，只有当没有滚动效果时才添加滚动效果
+            if (!this.scroll) {
+              this.scroll = new BScroll(this.$refs.listContent, {
+                click: true
+              });
+            } else {
+              // 存在滚动效果，则不用重新渲染，使用refresh会重新适配内容的高度差，决定是否可滚动
+              this.scroll.refresh();
+            }
+          });
+        }
+        return show;
       }
     },
     methods: {
+      // 父组件调用的子组件方法，增加商品后的抛物小球
       drop(el) {
         for (let i = 0; i < this.balls.length; i++) {
           let ball = this.balls[i];
@@ -109,6 +169,7 @@
           }
         }
       },
+      // 过渡效果开始
       beforeEnter(el) {
         let count = this.balls.length;
         while (count--) {
@@ -122,24 +183,29 @@
             console.log(y);
             el.style.display = ''; // 显示小球
             // 外层元素做纵向变化
-            el.style.webkitTransform = `translate3d(0, ${y}px, 0)`;
-            el.style.transform = `translate3d(0, ${y}px, 0)`;
+            el.style.webkitTransform = `translate3D(0, ${y}px, 0)`;
+            el.style.transform = `translate3D(0, ${y}px, 0)`;
             // 内层元素做横向变化
             let inner = el.getElementsByClassName('inner-hook')[0];
-            inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`;
-            inner.style.transform = `translate3d(${x}px, 0, 0)`;
+            inner.style.webkitTransform = `translate3D(${x}px, 0, 0)`;
+            inner.style.transform = `translate3D(${x}px, 0, 0)`;
           }
         }
       },
-      enter(el) {
+      // 当只用 JavaScript 过渡的时候， 在 enter 和 leave 中，回调函数 done 是必须的 。否则，它们会被同步调用，过渡会立即完成。
+      enter(el, done) {
+        // Velocity(el, {webkitTransform: translate3D(0, 0, 0), transform: translate3d(0, 0, 0), duration: 300});
+        // let inner = el.getElementsByClassName('inner-hook')[0];
+        // Velocity(inner, {webkitTransform: translate3d(0, 0, 0), transform: translate3d(0, 0, 0), duration: done});
         /* eslint-disable no-unused-vars */
         let rf = el.offestHeight; // 出发一次浏览器重绘
         this.$nextTick(() => {
-          el.style.webkitTransform = 'translate3d(0, 0, 0)';
-          el.style.transform = 'translate3d(0, 0, 0)';
+          el.style.webkitTransform = 'translate3D(0, 0, 0)';
+          el.style.transform = 'translate3D(0, 0, 0)';
           let inner = el.getElementsByClassName('inner-hook')[0];
-          inner.style.webkitTransform = 'translate3d(0, 0, 0)';
-          inner.style.transform = 'translate3d(0, 0, 0)';
+          inner.style.webkitTransform = 'translate3D(0, 0, 0)';
+          inner.style.transform = 'translate3D(0, 0, 0)';
+          done();
         });
       },
       afterEnter(el) {
@@ -149,12 +215,24 @@
           ball.show = false;
           el.style.display = 'none';
         }
+      },
+      // 过渡效果结束
+      // 点击底部购物车
+      toggleList() {
+        if (!this.totalCount) {
+          return;
+        }
+        this.fold = !this.fold;
       }
+    },
+    components: {
+      cartcontrol
     }
   };
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
+  @import "../../common/stylus/mixin.styl"
   .shopcart
     position: fixed
     left: 0
@@ -255,5 +333,56 @@
           transition: all 0.4s
         &.drop-enter-active
           transition: all 0.4s
-          
+    .shopcart-list
+      position: absolute
+      left: 0
+      top: 0
+      z-index: -1
+      width: 100%
+      transform: translate3d(0, -100%, 0) // 相对于当前自身的高度进行偏移
+      &.fold-enter-active, &.fold-leave-active
+        transition: all 0.5s
+      &.fold-enter, &.fold-leave-to
+        transform: translate3d(0, 0, 0)
+      .list-header
+        height: 40px
+        line-height: 40px
+        padding: 0 18px
+        background-color: #f3f5f7
+        border-bottom: 1px solid rgba(7, 17, 27, 0.1)
+        .title
+          float: left
+          font-size: 14px
+          color: rgb(7, 17, 27)
+        .empty
+          float: right
+          font-size: 12px
+          color: rgb(0, 160, 220)
+      .list-content
+        padding: 0 18px
+        max-height: 217px
+        overflow: hidden
+        background-color: #fff
+        .food
+          position: relative
+          padding: 12px 0
+          box-sizing: border-box
+          border-1px(rgba(7, 17, 27, 0.1))
+          .name
+            line-height: 24px
+            font-size: 14px
+            color: rgb(7, 17, 27)
+          .price
+            position: absolute
+            right: 90px
+            bottom: 12px
+            line-height: 24px
+            font-size: 14px
+            font-weight: 700
+            color: rgb(240, 20, 20)
+          .cartcontrol-wrapper
+            position: absolute
+            right: 6px
+            bottom: 6px
+        
 </style>

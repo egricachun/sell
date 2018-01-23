@@ -1,5 +1,6 @@
 <template>
 <div class="header">
+  <!-- 头部 -->
   <div class="content-wrapper">
     <div class="avatar">
       <img :src="seller.avatar" width="64" height="64" />
@@ -20,13 +21,16 @@
       <i class="icon-keyboard_arrow_right"></i>
     </div>
   </div>
+  <!-- 公告 -->
   <div class="bulletin-wrapper" @click="showDetail">
     <span class="bulletin-title"></span><span class="bulletin-text">{{seller.bulletin}}</span>
     <i class="icon-keyboard_arrow_right"></i>
   </div>
+  <!-- 头部背景图片 -->
   <div class="background">
     <img :src="seller.avatar" width="100%" height="100%">
   </div>
+  <!-- 商家详情 -->
   <transition name="fade">
     <div class="detail" v-show="detailShow">
       <!-- 使用Sticky footers布局（该方法稍复杂，但兼容性是最好的） -->
@@ -69,24 +73,28 @@
   import star from '@components/star/star';
   export default {
     props: {
+      // 商家信息
       seller: {
         type: Object
       }
     },
     data() {
       return {
-        detailShow: false
+        detailShow: false // 是否显示商家详情
       };
     },
     methods: {
+      // 显示商家详情
       showDetail() {
         this.detailShow = true;
       },
+      // 隐藏商家详情
       hideDetail() {
         this.detailShow = false;
       }
     },
     created() {
+      // 优惠图标数组
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
     },
     components: {

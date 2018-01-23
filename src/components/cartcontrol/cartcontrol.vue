@@ -22,6 +22,7 @@
       console.log(this.food);
     },
     methods: {
+      // 增加商品
       addCart(event) {
         if (!event._constructed) {
           return;
@@ -34,6 +35,7 @@
         this.$emit('cartAdd', event.target);
         // this.$emit('cart.add', event.target); // 触发父组件事件（方法，数据）
       },
+      // 减少
       decreaseCart(even) {
         if (!even._constructed) {
           return;

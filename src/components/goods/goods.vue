@@ -1,6 +1,7 @@
 <template>
   <div class="goods">
   <!-- vue获取dom对象用ref，名字要用中划线链接，不可用驼峰  -->
+    <!-- 左侧菜单栏 -->
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
       <li v-for="(item, index) in goods" class="menu-item" :class="{'current': currentIndex === index}" @click="selectMenu(index,$event)">
@@ -10,13 +11,14 @@
       </li>
       </ul>
     </div>
+    <!-- 右侧商品 -->
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
       <!-- 书写习惯，当需要一个class专用于被js选择时，在最后加上hook -->
         <li v-for="item in goods" class="food-list food-list-hook">
           <h1 class="title">{{item.name}}</h1>
           <ul>
-            <li v-for="food in item.foods" class="food-item border-1px">
+            <li v-for="food in item.foods" class="food-item border-1px" @click="selectFood(food, $event)">
               <div class="icon">
                 <img width="57" height="57" :src="food.icon" />
               </div>
@@ -27,8 +29,7 @@
                   <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
-                  <span class="now">￥{{food.price}}</span>
-                  <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                  <span class="now">￥{{food.price}}</span><span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
                 <div class="cartcontrol-wrapper">
                   <cartcontrol @cartAdd="_drop" :food = "food"></cartcontrol>
@@ -39,7 +40,10 @@
         </li>
       </ul>
     </div>
+    <!-- 底部购物车 -->
     <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <!-- 商品详情 -->
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 
@@ -48,18 +52,21 @@
   import BScroll from 'better-scroll';
   import shopcart from '@components/shopcart/shopcart';
   import cartcontrol from '@components/cartcontrol/cartcontrol';
+  import food from '@components/food/food';
   const ERR_OK = 0;
   export default {
     props: {
+      // 商家信息
       seller: {
         type: Object
       }
     },
     data() {
       return {
-        goods: [],
+        goods: [], // 商品信息
         listHeight: [], // 存储每个分类距该容器的高度
-        scrollY: 0
+        scrollY: 0, // 商品列表距该列表的长度
+        selectedFood: {} // 点击查看详情的商品
       };
     },
     computed: {
@@ -74,6 +81,7 @@
         }
         return 0;
       },
+      // 选择商品进购物车
       selectFoods() {
         let foods = [];
         this.goods.forEach((good) => {
@@ -86,6 +94,7 @@
         return foods;
       }
     },
+    // 请求json.data数据
     created() {
       this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee'];
       this.$http.get('/api/goods').then(response => {
@@ -140,6 +149,14 @@
         let el = foodList[index];
         this.foodsScroll.scrollToElement(el, 300); // 滚动到指定元素，滚动时间
       },
+      // 选择商品打开详情
+      selectFood(food, event) {
+        if (!event._constructed) {
+          return;
+        }
+        this.selectedFood = food;
+        this.$refs.food.show();
+      },
       // cartcontrol选择商品子组件触发的事件
       _drop(target) {
         // this.$refs.shopcart(这个shopcart是ref="shopcart")可访问到shopcart(这个是shopcart)子组建
@@ -148,7 +165,8 @@
     },
     components: {
       shopcart,
-      cartcontrol
+      cartcontrol,
+      food
     }
   };
 </script>

@@ -20,9 +20,11 @@
       }
     },
     computed: {
+      // 星星大小
       starType() {
         return 'star-' + this.size;
       },
+      // 星星类型=》整数：黄星；>=0.5,半颗星；<0.5:空星
       itemClasses() {
         let result = [];
         // floor下舍入，即向小的整数舍入
