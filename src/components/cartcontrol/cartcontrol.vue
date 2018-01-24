@@ -1,12 +1,13 @@
 <template>
   <div class="cartcontrol">
     <transition name="move"> <!-- 两个过渡效果同时进行 -->
-      <div class="cart-decrease" v-show="food.count>0" @click="decreaseCart"> <!-- 平移 -->
+      <!-- click.stop.prevent为点击事件阻止冒泡 -->
+      <div class="cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart"> <!-- 平移 -->
         <span class="inner icon-remove_circle_outline"></span> <!-- 滚动 -->
       </div>
     </transition>
     <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
-    <div class="cart-add icon-add_circle" @click="addCart"></div>
+    <div class="cart-add icon-add_circle" @click.stop.prevent="addCart"></div>
   </div>
 </template>
 
