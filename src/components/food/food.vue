@@ -48,13 +48,13 @@
                   <span class="name">{{rating.username}}</span>
                   <img class="avatar" width="12" height="12" :src="rating.avatar" />
                 </div>
-                <div class="time">{{rating.rateTime}}</div>
+                <div class="time">{{rating.rateTime | formatDate}}</div>
                 <p class="text">
                   <span :class="{'icon-thumb_up':rating.rateType === 0, 'icon-thumb_down': rating.rateType === 1}"></span>{{rating.text}}
                 </p>
               </li>
             </ul>
-            <div class="no-rating" v-show="!food.ratings || !food.ratings.length"></div>
+            <div class="no-rating" v-show="!food.ratings || !food.ratings.length">暂无评价</div>
           </div>
         </div>
       </div>
@@ -63,8 +63,10 @@
 </template>
 
 <script type="text/ecmascript-6">
+// 不带大括号用的是export default定义模块 是默认的，且只能有一个，而{formatDate}要带大括号是因为date.js中用的是export定义模块，但可以export多个模块，所以要用{}指定是那个模块
   import BScroll from 'better-scroll';
   import Vue from 'vue';
+  import {formatDate} from '@common/js/date'; // 引入转换日期格式方法
   import cartcontrol from '@components/cartcontrol/cartcontrol';
   import split from '@components/split/split';
   import ratingselect from '@components/ratingselect/ratingselect';
@@ -127,7 +129,7 @@
         // 上条代码运行后 ebent.target的display马上变成了none,抛物小球就获取不到位置了，解决方法是给该element的消失加上动画，这样element没有立刻修消失，就能获取到他的位置了
         Vue.set(this.food, 'count', 1); // food中原本没有count字段，可用Vue.set方法添加，但要引入vue
       },
-      // 评论列表按周分类进行显示 
+      // 评论列表按照分类进行显示
       needShow(type, text) {
         // 是否只显示有内容的
         if (this.onlyContent && !text) {
@@ -141,14 +143,28 @@
         }
       },
       // 监听子组件的事件，选择了那个评价类型
-      ratingtypeSelect_p(type) {
-        this.selectType = type;
-        this.scroll.refresh();
+      ratingtypeSelect_p(value) {
+        this.selectType = value;
+        // 内容高度变了，要refresh设置BScroll，使高度重置
+        // 使用$nextTick,上调语句只是更改了数据，vue的dom更新是异步的，放在一个更新队列中，要确保refresh在dom更新后运行，否则无效
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
       },
       // 监听子组件的事件，选择了那个评价类型
-      contentToggle_p(onlyContent) {
-        this.onlyContent = onlyContent;
-        this.scroll.refresh();
+      contentToggle_p(value) {
+        this.onlyContent = value;
+        // 内容高度变了，要refresh设置BScroll，使高度重置
+        this.$nextTick(() => {
+          this.scroll.refresh();
+        });
+      }
+    },
+    filters: {
+      // 使用过滤器把时间戳转化成时间
+      formatDate(time) {
+        let date = new Date(time); // 吧时间戳转化为date类型的对象
+        return formatDate(date, 'yyyy-MM-dd hh:mm'); // 调用改方法转换日期格式 最好卸载通用js中
       }
     },
     components: {
@@ -302,4 +318,8 @@
               color: rgb(0, 160, 220)
             .icon-thumb_down
               color: rgb(147, 153, 159)
+        .no-rating
+          padding: 16px 0
+          font-size: 12px
+          color: rgb(147, 153, 159)
 </style>

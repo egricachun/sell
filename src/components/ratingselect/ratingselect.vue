@@ -60,7 +60,7 @@
       }
     },
     methods: {
-      // 选择评价类型 
+      // 选择评价类型
       select(type, event) {
         if (!event._constructed) {
           return;
