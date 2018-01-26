@@ -12,23 +12,37 @@
         <router-link to="/seller">seller</router-link>
     	</div>
     </div>
-    <router-view :seller="seller"></router-view>
+    <!-- keep-alive  router切换，组件状态保留。实现原理：加载过的组件会把它的状态保存在内存中，切换时，如何组件加载过且保留在内存中，就从内存中把组件状态恢复-->
+    <keep-alive>
+      <router-view :seller="seller"></router-view>
+    </keep-alive>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-	import header from './components/header/header.vue';
+	import {urlParse} from '@common/js/util.js';
+	import header from '@components/header/header.vue';
 	const ERR_OK = 0;
 	export default {
 	  data() {
 	    return {
-	      seller: {}
+	      seller: {
+	        // 获得id给seller，把那个在路由中带上,表示进入的是哪间店铺
+	        id: (() => {
+	          let queryParam = urlParse();
+	          console.log(queryParam);
+	          return queryParam.id;
+	        })()
+	      }
 	    };
 	  },
 	  created() {
-	    this.$http.get('/api/seller').then(response => {
+	    this.$http.get('/api/seller?id=' + this.seller.id).then(response => {
 	      if (response.body.errno === ERR_OK) {
-	        this.seller = response.body.data;
+	        // 直接赋值seller的id会配除掉,可用Object.assign（es6的语法）进行赋值，这样可以扩展属性
+	        // 最后获得的数据，相当于在有id（this.seller)的基础上添加了其他属性（response.data）
+	        this.seller = Object.assign({}, this.seller, response.body.data);
+	        console.log(this.seller.id);
 	      }
 	    });
 	  },
@@ -40,12 +54,12 @@
 
 
 <style lang="stylus" rel="stylesheet/stylus">
-// @import ��stylus�������﷨ �����������·���µ�styl
+// @import ÊÇstylusµÄÌØÊâÓï·¨ ¿ÉÒÔÒýÈëÈçºÎÂ·¾¶ÏÂµÄstyl
   @import "./common/stylus/mixin.styl";
 
-// ʹ��α��after��ʵ�ֱ���1���أ�ֱ��ʹ��border-bottom���ֻ��Ͽ��ǱȽϴֵģ���Ϊ��ipone6��dpi��2����������Ϊ2����
-// &��ʾ���ĸ�Ԫ�� ��.tab-item��> Ϊ����ѡ����
-// ���迼�Ǵ���ļ���д����vue-loader>node_modules>postcss��������ļ������⣨�Զ����Ӽ��ݴ��룩
+// Ê¹ÓÃÎ±ÀàafterÀ´ÊµÏÖ±ßÏß1ÏñËØ£»Ö±½ÓÊ¹ÓÃborder-bottomÔÚÊÖ»úÉÏ¿´ÊÇ±È½Ï´ÖµÄ£¬ÒòÎªÈçipone6µÄdpiÊÇ2£¬ËùÒÔÏßÌõÎª2ÏñËØ
+// &±íÊ¾ËûµÄ¸¸ÔªËØ ¼´.tab-item£»> ÎªºóÅÅÑ¡ÔñÆ÷
+// ²»Ðè¿¼ÂÇ´úÂëµÄ¼æÈÝÐ´·¨£¬vue-loader>node_modules>postcss»á½â¾ö´úÂëµÄ¼æÈÝÎÊÌâ£¨×Ô¶¯Ìí¼Ó¼æÈÝ´úÂë£©
   .tab
     display: flex
     width: 100%
