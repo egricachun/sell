@@ -91,5 +91,13 @@ module.exports = {
     net: 'empty',
     tls: 'empty',
     child_process: 'empty'
+  },
+  vue: {
+    loaders: utils.cssLoaders({sourceMap: useCssSourceMap}),
+    postcss: [
+      require('autoprefixer')({
+        browsers: ['last 2 versions', 'Android >= 4.0']
+      })
+    ]
   }
 }

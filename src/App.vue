@@ -54,12 +54,11 @@
 
 
 <style lang="stylus" rel="stylesheet/stylus">
-// @import ÊÇstylusµÄÌØÊâÓï·¨ ¿ÉÒÔÒýÈëÈçºÎÂ·¾¶ÏÂµÄstyl
-  @import "./common/stylus/mixin.styl";
+// @import 是stylus的特殊语法 可以引入如何路径下的styl
+  @import "./common/stylus/mixin.styl"
 
-// Ê¹ÓÃÎ±ÀàafterÀ´ÊµÏÖ±ßÏß1ÏñËØ£»Ö±½ÓÊ¹ÓÃborder-bottomÔÚÊÖ»úÉÏ¿´ÊÇ±È½Ï´ÖµÄ£¬ÒòÎªÈçipone6µÄdpiÊÇ2£¬ËùÒÔÏßÌõÎª2ÏñËØ
-// &±íÊ¾ËûµÄ¸¸ÔªËØ ¼´.tab-item£»> ÎªºóÅÅÑ¡ÔñÆ÷
-// ²»Ðè¿¼ÂÇ´úÂëµÄ¼æÈÝÐ´·¨£¬vue-loader>node_modules>postcss»á½â¾ö´úÂëµÄ¼æÈÝÎÊÌâ£¨×Ô¶¯Ìí¼Ó¼æÈÝ´úÂë£©
+// 使用伪类after来实现边线1像素；直接使用border-bottom在手机上看是比较粗的，因为如ipone6的dpi是2，所以线条为2像素
+// &表示他的父元素 即.tab-item；> 为后排选择器
   .tab
     display: flex
     width: 100%

@@ -63,7 +63,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-// 不带大括号用的是export default定义模块 是默认的，且只能有一个，而{formatDate}要带大括号是因为date.js中用的是export定义模块，但可以export多个模块，所以要用{}指定是那个模块
+  // 不带大括号用的是export default定义模块 是默认的，且只能有一个，而{formatDate}要带大括号是因为date.js中用的是export定义模块，但可以export多个模块，所以要用{}指定是那个模块
   import BScroll from 'better-scroll';
   import Vue from 'vue';
   import {formatDate} from '@common/js/date'; // 引入转换日期格式方法
