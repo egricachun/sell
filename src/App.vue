@@ -37,7 +37,7 @@
 	    };
 	  },
 	  created() {
-	    this.$http.get('/api/seller?id=' + this.seller.id).then(response => {
+	    this.$http.get('/api/seller?id=' + this.seller.id).then((response) => {
 	      if (response.body.errno === ERR_OK) {
 	        // 直接赋值seller的id会配除掉,可用Object.assign（es6的语法）进行赋值，这样可以扩展属性
 	        // 最后获得的数据，相当于在有id（this.seller)的基础上添加了其他属性（response.data）
@@ -51,7 +51,6 @@
 	  }
 	};
 </script>
-
 
 <style lang="stylus" rel="stylesheet/stylus">
 // @import 是stylus的特殊语法 可以引入如何路径下的styl

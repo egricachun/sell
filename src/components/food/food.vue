@@ -152,8 +152,8 @@
         });
       },
       // 监听子组件的事件，选择了那个评价类型
-      contentToggle_p(value) {
-        this.onlyContent = value;
+      contentToggle_p() {
+        this.onlyContent = !this.onlyContent;
         // 内容高度变了，要refresh设置BScroll，使高度重置
         this.$nextTick(() => {
           this.scroll.refresh();

@@ -16,6 +16,7 @@ Vue.use(VueResource);
 
 // 定义路由(配置路由)
 const routes = [
+  {path: '/', component: goods},
   {path: '/goods', component: goods},
   {path: '/seller', component: seller},
   {path: '/ratings', component: ratings}

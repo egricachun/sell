@@ -65,7 +65,7 @@
         if (!event._constructed) {
           return;
         }
-        this.selectType = type;
+        // this.selectType = type;
         // 通知父组件参数的变化
         this.$emit('ratingtypeSelect', type);
       },
@@ -73,9 +73,9 @@
         if (!event._constructed) {
           return;
         }
-        this.onlyContent = !this.onlyContent;
+        // this.onlyContent = !this.onlyContent;
         // 通知父组件参数的变化
-        this.$emit('contentToggle', this.onlyContent);
+        this.$emit('contentToggle');
       }
     }
   };
