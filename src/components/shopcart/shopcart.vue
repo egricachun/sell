@@ -19,11 +19,14 @@
   	</div>
     <!-- 选择商品，小球飞入 -->
     <div class="ball-container">
-      <transition name="drop" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
-        <div v-for="ball in balls" v-show="ball.show" class="ball">
-          <div class="inner inner-hook">11111</div>
-        </div>
-      </transition>
+      <!-- 用于循环小球，如果transition包在循环外面会提示要用transition-group -->
+      <div v-for="ball in balls">
+        <transition name="drop" @before-enter="beforeEnter" @enter="enter" @after-enter="afterEnter">
+          <div v-show="ball.show" class="ball">
+            <div class="inner inner-hook"></div>
+          </div>
+        </transition>
+      </div>
     </div>
     <!-- 购物车列表 -->
     <transition name="fold">
@@ -65,7 +68,7 @@
           return [
             {
               price: 5,
-              count: 0
+              count: 1
             }
           ];
         }
@@ -85,6 +88,18 @@
       return {
         // 抛物小球
         balls: [
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
+          {
+            show: false
+          },
           {
             show: false
           }
@@ -180,15 +195,15 @@
             let x = rect.left - 32; // 小球离终点的x轴距离
             // window.innerHeight获得窗口高度
             let y = -(window.innerHeight - rect.top - 22); // 小球离终点的y轴距离
-            console.log(y);
+            // console.log(y);
             el.style.display = ''; // 显示小球
             // 外层元素做纵向变化
-            el.style.webkitTransform = `translate3D(0, ${y}px, 0)`;
-            el.style.transform = `translate3D(0, ${y}px, 0)`;
+            el.style.webkitTransform = `translate3d(0, ${y}px, 0)`;
+            el.style.transform = `translate3d(0, ${y}px, 0)`;
             // 内层元素做横向变化
             let inner = el.getElementsByClassName('inner-hook')[0];
-            inner.style.webkitTransform = `translate3D(${x}px, 0, 0)`;
-            inner.style.transform = `translate3D(${x}px, 0, 0)`;
+            inner.style.webkitTransform = `translate3d(${x}px, 0, 0)`;
+            inner.style.transform = `translate3d(${x}px, 0, 0)`;
           }
         }
       },
@@ -200,16 +215,16 @@
         /* eslint-disable no-unused-vars */
         let rf = el.offestHeight; // 出发一次浏览器重绘
         this.$nextTick(() => {
-          el.style.webkitTransform = 'translate3D(0, 0, 0)';
-          el.style.transform = 'translate3D(0, 0, 0)';
+          el.style.webkitTransform = 'translate3d(0, 0, 0)';
+          el.style.transform = 'translate3d(0, 0, 0)';
           let inner = el.getElementsByClassName('inner-hook')[0];
-          inner.style.webkitTransform = 'translate3D(0, 0, 0)';
-          inner.style.transform = 'translate3D(0, 0, 0)';
-          done();
+          inner.style.webkitTransform = 'translate3d(0, 0, 0)';
+          inner.style.transform = 'translate3d(0, 0, 0)';
+          // transitionend过度结束事件，即过度结束才调用done,告诉vue这个钩子函数结束了，可以执行下一个函数了
+          el.addEventListener('transitionend', done);
         });
       },
       afterEnter(el) {
-        console.log('afterEnter');
         let ball = this.dropBalls.shift();
         if (ball) {
           ball.show = false;
@@ -325,14 +340,15 @@
         left: 32px
         bottom: 22px
         z-index: 200
-        .inner
-          width: 16px
-          height: 16px
-          border-radius: 50%
-          backgorund-color: rgb(0, 160, 220)
-          transition: all 0.4s
+        cubic-bezier(0.49, -0.29, 0.75, 0.41)
         &.drop-enter-active
           transition: all 0.4s
+          .inner
+            width: 16px
+            height: 16px
+            border-radius: 50%
+            background-color: rgb(0, 160, 220)
+            transition: all 0.4s linear
     .shopcart-list
       position: absolute
       left: 0

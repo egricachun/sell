@@ -40,7 +40,7 @@
         </li>
       </ul>
     </div>
-    <!-- 底部购物车 -->
+    <!-- 底部购物车 抛物小球 -->
     <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
     <!-- 商品详情 -->
     <food :food="selectedFood" ref="food"></food>

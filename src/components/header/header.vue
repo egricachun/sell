@@ -219,11 +219,6 @@
       height: 100%
       z-index: -1
       filter: blur(10px)// 产生模糊效果
-    .fade-enter-active, .fade-leave-active
-      transition: all 0.5s
-    .fade-enter, .fade-leave-to
-      opacity: 0
-      background-color: rgba(7, 17, 27, 0)  
     .detail
       position: fixed
       z-index: 100
@@ -233,7 +228,13 @@
       height: 100%
       overflow: auto
       background-color: rgba(7, 17, 27, 0.8)
+      opacity: 1
       backdrop-filter: blur(10px) // 背景模糊（只在iso上有用，安卓暂时无效）
+      &.fade-enter-active, &.fade-leave-active
+        transition: all 0.5s
+      &.fade-enter, &.fade-leave-active
+        opacity: 0
+        background-color: rgba(7, 17, 27, 0)  
       .detail-wrapper
         min-height: 100%
         width: 100%
